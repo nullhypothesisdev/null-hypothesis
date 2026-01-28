@@ -1,0 +1,156 @@
+{
+    "cases": [
+        {
+            "id": "CASE-001",
+            "title": "The Wage Determinant",
+            "dataset": "Wage Data",
+            "status": "OPEN",
+            "classification": "Regression / Supervised",
+            "briefing": "We are tracking 3,000 male subjects in the Atlantic region. The objective is to isolate the variables determining income.",
+            "investigation_points": [
+                "Is the relationship between Age and Wage linear, or does it degrade after 60? [cite: 37]",
+                "Does Education level guarantee a higher bracket, or is it merely a correlation? [cite: 39]",
+                "The data spans 2003-2009. We must account for the steady $10,000 inflationary drift. [cite: 38]"
+            ],
+            "variables": {
+                "n": 3000,
+                "p": 11,
+                "key_features": [
+                    "Age",
+                    "Year",
+                    "Education Level"
+                ]
+            }
+        },
+        {
+            "id": "CASE-002",
+            "title": "The S&P Volatility",
+            "dataset": "Smarket Data",
+            "status": "PENDING",
+            "classification": "Classification / Supervised",
+            "briefing": "Five years of daily S&P 500 movements (2001-2005). The goal is not to predict the price, but the 'Direction' (Up or Down).",
+            "investigation_points": [
+                "Initial scans suggest yesterday's returns have zero correlation with today's. [cite: 90]",
+                "Standard trading strategies fail here. We need to find weak non-linear signals. [cite: 92]",
+                "Can we break the 50/50 probability barrier? (Current Target: 60% Accuracy). [cite: 94]"
+            ],
+            "variables": {
+                "n": 1250,
+                "p": 9,
+                "key_features": [
+                    "Lag1-Lag5",
+                    "Volume",
+                    "Direction"
+                ]
+            }
+        },
+        {
+            "id": "CASE-003",
+            "title": "The Genetic Clusters",
+            "dataset": "NCI60 Data",
+            "status": "UNSOLVED",
+            "classification": "Clustering / Unsupervised",
+            "briefing": "64 cancer cell lines. 6,830 gene expression measurements. No labels provided. We are flying blind.",
+            "investigation_points": [
+                "We cannot predict an output. We must find structure where none is visible. [cite: 118]",
+                "Visualizing 6,830 dimensions is impossible. We need dimensionality reduction (PCA) to see the truth. [cite: 121]",
+                "Preliminary scans suggest 4 distinct clusters hidden in the noise. [cite: 124]"
+            ],
+            "variables": {
+                "n": 64,
+                "p": 6830,
+                "key_features": [
+                    "Gene Expression Levels"
+                ]
+            }
+        }
+    ],
+    "notation": {
+        "title": "Mathematical Notation",
+        "description": "Standard symbols and definitions used throughout the text.",
+        "entries": [
+            {
+                "symbol": "n",
+                "definition": "The number of distinct observations.",
+                "example": "In the Wage Data, $n = 3000$ (subjects).",
+                "type": "Scalar"
+            },
+            {
+                "symbol": "p",
+                "definition": "The number of variables (features) available for prediction.",
+                "example": "In the Wage Data, $p = 11$ (Age, Year, Education, etc.).",
+                "type": "Scalar"
+            },
+            {
+                "symbol": "x_{ij}",
+                "definition": "The value of the j-th variable for the i-th observation.",
+                "example": "$x_{3,5}$ is the 5th variable of the 3rd patient.",
+                "type": "Scalar"
+            },
+            {
+                "symbol": "X",
+                "definition": "The input matrix of dimensions n x p.",
+                "example": "The full spreadsheet containing all data points.",
+                "type": "Matrix"
+            },
+            {
+                "symbol": "y",
+                "definition": "The vector of outputs we wish to predict.",
+                "example": "The column of 'Wages' for all $n$ subjects.",
+                "type": "Vector"
+            }
+        ]
+    },
+    "timeline": [
+        {
+            "era": "Early 19th Century",
+            "event": "The Method of Least Squares",
+            "architects": [
+                "Legendre",
+                "Gauss"
+            ],
+            "impact": "The earliest form of Linear Regression. First successfully applied to astronomical problems.",
+            "status": "FOUNDATIONAL"
+        },
+        {
+            "era": "1936",
+            "event": "Linear Discriminant Analysis (LDA)",
+            "architects": [
+                "R.A. Fisher"
+            ],
+            "impact": "Predicted qualitative values (Classes) for the first time, moving beyond simple regression.",
+            "status": "CRITICAL"
+        },
+        {
+            "era": "1940s",
+            "event": "Logistic Regression",
+            "architects": [
+                "Various"
+            ],
+            "impact": "An alternative probabilistic approach to classification, now the standard for binary outcomes.",
+            "status": "STANDARD"
+        },
+        {
+            "era": "Early 1970s",
+            "event": "Generalized Linear Models (GLM)",
+            "architects": [
+                "Nelder",
+                "Wedderburn"
+            ],
+            "impact": "Unified the entire class of statistical learning methods under one mathematical framework.",
+            "status": "UNIFYING"
+        },
+        {
+            "era": "Mid 1980s",
+            "event": "Classification and Regression Trees (CART)",
+            "architects": [
+                "Breiman",
+                "Friedman",
+                "Olshen",
+                "Stone"
+            ],
+            "impact": "Computing power allowed for non-linear models, birthing the modern era of decision trees.",
+            "status": "MODERN"
+        }
+    ]
+}

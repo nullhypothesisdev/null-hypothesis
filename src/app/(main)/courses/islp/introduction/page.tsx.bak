@@ -1,0 +1,145 @@
+import { Chapter1Data } from "@/data/islp/types";
+import ch1Data from "@/data/islp/ch1.json";
+import CaseStudyGrid from "@/components/islp/introduction/CaseStudyGrid";
+import CodexTable from "@/components/islp/introduction/CodexTable";
+import HistoricalTimeline from "@/components/islp/introduction/HistoricalTimeline";
+import PageHeader from "@/components/layout/PageHeader";
+import { ArrowRight, BookOpen, Binary } from "lucide-react";
+import Link from "next/link";
+import CourseSidebar from "@/components/islp/layout/CourseSidebar";
+import VideoPlaceholder from "@/components/islp/layout/VideoPlaceholder";
+
+import { supabase } from "@/lib/supabase";
+
+// Cast the imported JSON to our typed interface
+const data = ch1Data as unknown as Chapter1Data;
+
+export const metadata = {
+    title: "Introduction | ISLP",
+    description: "The Wage Determinant, S&P Volatility, and Genetic Clusters.",
+};
+
+async function getCourseData() {
+    const { data: course } = await supabase
+        .from('courses')
+        .select('id, slug')
+        .eq('slug', 'islp')
+        .single();
+
+    if (!course) return { course: null, chapters: [], currentChapterId: '' };
+
+    const { data: chapters } = await supabase
+        .from('course_chapters')
+        .select('*')
+        .eq('course_id', course.id)
+        .eq('published', true)
+        .order('chapter_number', { ascending: true });
+
+    const currentChapter = chapters?.find(c => c.slug === 'introduction');
+
+    return {
+        course,
+        chapters: chapters || [],
+        currentChapterId: currentChapter?.id || ''
+    };
+}
+
+export default async function IntroductionPage() {
+    const { course, chapters, currentChapterId } = await getCourseData();
+
+    return (
+        <div className="min-h-screen bg-paper pb-20 pt-32 px-6">
+            <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+                {/* LEFT SIDEBAR: Navigation */}
+                <div className="hidden lg:block lg:col-span-3">
+                    <CourseSidebar
+                        chapters={chapters}
+                        courseSlug={course?.slug || 'islp'}
+                        currentChapterId={currentChapterId}
+                    />
+                </div>
+
+                {/* CENTER CONTENT */}
+                <main className="lg:col-span-6 space-y-24">
+                    <PageHeader
+                        title="Introduction"
+                        category={{
+                            label: "ISLP / Chapter 1",
+                            icon: <Binary className="w-4 h-4" />,
+                            color: "text-emerald-500"
+                        }}
+                        tagline="The Motivating Problems of Statistical Learning"
+                        backHref="/courses/islp"
+                        backLabel="Course Index"
+                    />
+
+                    {/* Section 1: The Three Case Studies */}
+                    <section>
+                        <div className="mb-10">
+                            <h2 className="text-3xl font-display font-medium text-ink mb-4">
+                                The Three Problems
+                            </h2>
+                            <p className="text-ink/60 text-lg leading-relaxed">
+                                Statistical learning is not an abstract exercise. It is the art of extracting signal from noise. We begin with three real-world datasets that define the primary categories of our work: Regression, Classification, and Clustering.
+                            </p>
+                        </div>
+
+                        {/* Force 1 column for the cases in this constrained width, or let grid responsive handle it */}
+                        <div className="grid grid-cols-1 gap-6">
+                            <CaseStudyGrid cases={data.cases} />
+                        </div>
+                    </section>
+
+                    {/* Section 2: The Notation System */}
+                    <section className="bg-ink/[0.02] p-8 -mx-8 sm:rounded-2xl sm:mx-0 border border-ink/5">
+                        <div className="mb-8 flex items-center justify-between">
+                            <div>
+                                <h2 className="text-2xl font-display font-medium text-ink flex items-center gap-3">
+                                    <BookOpen className="w-6 h-6 text-primary" />
+                                    Notation
+                                </h2>
+                                <p className="text-sm text-ink/40 font-mono mt-1">Standardized Terminology</p>
+                            </div>
+                        </div>
+                        <CodexTable notation={data.notation} />
+                    </section>
+
+                    {/* Section 3: Historical Timeline */}
+                    <section>
+                        <div className="mb-16 text-center max-w-2xl mx-auto">
+                            <h2 className="text-3xl font-display font-medium text-ink mb-4">
+                                A History of Learning
+                            </h2>
+                            <p className="text-ink/60 text-lg leading-relaxed">
+                                We stand on the shoulders of giants. The tools we use today—from simple regression to modern deep learning—are the result of two centuries of mathematical evolution.
+                            </p>
+                        </div>
+
+                        <HistoricalTimeline events={data.timeline} />
+                    </section>
+
+                    {/* Footer Navigation */}
+                    <div className="flex justify-end pt-10 border-t border-ink/10">
+                        <Link
+                            href="/courses/islp/statistical-learning"
+                            className="group flex items-center gap-4 pl-8 pr-6 py-4 rounded-lg bg-ink text-paper hover:bg-primary transition-colors duration-300"
+                        >
+                            <div>
+                                <span className="block text-xs font-mono opacity-50 mb-0.5 text-right">NEXT CHAPTER</span>
+                                <span className="block font-medium text-lg">Statistical Learning</span>
+                            </div>
+                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </div>
+                </main>
+
+                {/* RIGHT SIDEBAR: Video Placeholder */}
+                <div className="hidden lg:block lg:col-span-3">
+                    <VideoPlaceholder />
+                </div>
+
+            </div>
+        </div>
+    );
+}

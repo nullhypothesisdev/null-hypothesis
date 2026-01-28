@@ -1,0 +1,165 @@
+@import "katex/dist/katex.min.css";
+@import "tailwindcss";
+
+/* --- THEME VARIABLES --- */
+:root {
+  /* LIGHT MODE - Aged paper and warm ink tones */
+  --paper-val: #f5f2ed;
+  --ink-val: #1f1c18;
+  --pencil-val: #756b5e;
+  --accent-val: #a8492e;
+  --card-val: rgba(255, 255, 255, 0.5);
+  --border-val: rgba(31, 28, 24, 0.12);
+  --noise-opacity: 0.12;
+}
+
+[data-theme="dark"] {
+  /* DARK MODE - Library at night */
+  --paper-val: #1a1614;
+  --ink-val: #f5f2ed;
+  --pencil-val: #a39582;
+  --accent-val: #d4774e;
+  --card-val: rgba(255, 255, 255, 0.03);
+  --border-val: rgba(245, 242, 237, 0.12);
+  --noise-opacity: 0.15;
+}
+
+@theme {
+  --color-paper: var(--paper-val);
+  --color-ink: var(--ink-val);
+  --color-pencil: var(--pencil-val);
+  --color-accent: var(--accent-val);
+  --color-card: var(--card-val);
+  --color-border-dim: var(--border-val);
+
+  --font-mono: var(--font-mono), monospace;
+  --font-latex: "CMU Serif", serif;
+}
+
+/* --- BASE STYLES --- */
+body {
+  background-color: var(--paper-val);
+  color: var(--color-ink);
+  font-family: var(--font-body), "Times New Roman", serif;
+  min-height: 100vh;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+}
+
+/* FOUC Prevention */
+.loading-state body {
+  overflow: hidden;
+  background-color: var(--paper-val);
+}
+
+/* Typography Defaults */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading), "Times New Roman", serif;
+  font-weight: 600;
+}
+
+code,
+pre,
+.font-mono {
+  font-family: var(--font-mono), monospace;
+}
+
+/* Standardized Micro-Typography */
+.text-xxs {
+  font-size: 0.625rem;
+  line-height: 1rem;
+}
+
+/* --- TEXTURE SYSTEM --- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  opacity: var(--noise-opacity);
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  transition: opacity 200ms ease-in-out;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.05) 50%, rgba(0, 0, 0, 0.2) 100%);
+  transition: background 200ms ease-in-out;
+}
+
+[data-theme="dark"] body::after {
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 60%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+/* --- THEME TRANSITIONS (Surgical Approach) --- */
+/* Only transition elements that actually change with theme */
+.card,
+[class*="bg-"],
+[class*="text-"],
+[class*="border-"] {
+  transition: background-color 200ms ease-in-out,
+    color 200ms ease-in-out,
+    border-color 200ms ease-in-out;
+}
+
+/* Interactive elements - keep them snappy */
+button,
+a,
+input,
+textarea,
+select,
+[role="button"] {
+  transition: all 150ms ease-in-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper-val);
+  transition: background 200ms ease-in-out;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-pencil);
+  border-radius: 4px;
+  opacity: 0.5;
+  transition: background 150ms ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* Skeleton Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* --- LATEX / ACADEMIC TYPOGRAPHY --- */
+.latex-prose {
+  font-family: var(--font-latex);
+  text-align: justify;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
