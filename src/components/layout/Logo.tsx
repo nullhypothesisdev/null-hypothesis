@@ -13,13 +13,12 @@ export default function Logo({ className = "", size = 40, fluid = false }: { cla
         ? { width: "100%", height: "auto", aspectRatio: "777 / 560" }
         : { width, height: size };
 
-    const [hasPlayed, setHasPlayed] = useState(false);
+    const [shouldAnimate, setShouldAnimate] = useState(false);
 
     useEffect(() => {
         const played = sessionStorage.getItem("LOGO_PLAYED");
-        if (played) {
-            setHasPlayed(true);
-        } else {
+        if (!played) {
+            setShouldAnimate(true);
             sessionStorage.setItem("LOGO_PLAYED", "true");
         }
     }, []);
@@ -35,9 +34,9 @@ export default function Logo({ className = "", size = 40, fluid = false }: { cla
             fillOpacity: 1,
             strokeOpacity: 1,
             transition: {
-                pathLength: { duration: hasPlayed ? 0 : 2.5, ease: "easeInOut" },
-                fillOpacity: { duration: hasPlayed ? 0 : 0.8, delay: hasPlayed ? 0 : 2.0, ease: "easeOut" },
-                strokeOpacity: { duration: hasPlayed ? 0 : 0.1 }
+                pathLength: { duration: 2.5, ease: "easeInOut" },
+                fillOpacity: { duration: 0.8, delay: 2.0, ease: "easeOut" },
+                strokeOpacity: { duration: 0.1 }
             }
         }
     };
@@ -45,11 +44,12 @@ export default function Logo({ className = "", size = 40, fluid = false }: { cla
     return (
         <div className={`relative flex items-center justify-center ${className}`} style={containerStyle}>
             <motion.svg
+                key={shouldAnimate ? "anim" : "static"}
                 viewBox="0 0 777 560"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-full h-full overflow-visible"
-                initial="hidden"
+                initial={shouldAnimate ? "hidden" : "visible"}
                 animate="visible"
             >
                 <g id="logo-paths" stroke="currentColor" strokeWidth="1.5">
