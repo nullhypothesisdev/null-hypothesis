@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, Table as TableIcon } from "lucide-react";
 import { BP_DATA, DESCRIPTIVE_STATS } from "@/data/studies/vital-predictor-data";
 import { cn } from "@/lib/utils";
@@ -124,9 +125,9 @@ export default function DataInspection() {
                 )}
             </div>
 
-            {/* FULL DATA MODAL */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+            {/* FULL DATA MODAL (Portal to Body) */}
+            {isModalOpen && createPortal(
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6">
                     {/* Backdrop */}
                     <div
                         className="absolute inset-0 bg-ink/20 backdrop-blur-sm animate-in fade-in duration-200"
@@ -134,9 +135,9 @@ export default function DataInspection() {
                     />
 
                     {/* Modal Content */}
-                    <div className="relative w-full max-w-4xl max-h-[85vh] bg-paper shadow-2xl rounded-xl border border-ink/10 flex flex-col animate-in zoom-in-95 duration-200">
+                    <div className="relative w-full max-w-4xl max-h-[85vh] bg-paper shadow-2xl rounded-xl border border-ink/10 flex flex-col animate-in zoom-in-95 duration-200 z-10">
                         {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-ink/10 bg-ink/5 rounded-t-xl">
+                        <div className="flex items-center justify-between p-6 border-b border-ink/10 bg-ink/5 rounded-t-xl shrink-0">
                             <div>
                                 <h3 className="font-serif text-xl font-bold text-ink">Full Dataset</h3>
                                 <p className="text-sm text-ink/50 font-mono mt-1">bloodpress.txt • n={BP_DATA.length}</p>
@@ -154,14 +155,14 @@ export default function DataInspection() {
                             <table className="w-full text-sm text-center">
                                 <thead className="text-xs font-mono uppercase text-ink/40 border-b border-ink/10 sticky top-0 bg-paper z-10 shadow-sm">
                                     <tr>
-                                        <th className="px-4 py-3 text-left">Pt ID</th>
-                                        <th className="px-4 py-3 font-bold text-ink">BP</th>
-                                        <th className="px-4 py-3">Age</th>
-                                        <th className="px-4 py-3">Weight</th>
-                                        <th className="px-4 py-3">BSA</th>
-                                        <th className="px-4 py-3">Dur</th>
-                                        <th className="px-4 py-3">Pulse</th>
-                                        <th className="px-4 py-3">Stress</th>
+                                        <th className="px-4 py-3 text-left bg-paper">Pt ID</th>
+                                        <th className="px-4 py-3 font-bold text-ink bg-paper">BP</th>
+                                        <th className="px-4 py-3 bg-paper">Age</th>
+                                        <th className="px-4 py-3 bg-paper">Weight</th>
+                                        <th className="px-4 py-3 bg-paper">BSA</th>
+                                        <th className="px-4 py-3 bg-paper">Dur</th>
+                                        <th className="px-4 py-3 bg-paper">Pulse</th>
+                                        <th className="px-4 py-3 bg-paper">Stress</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-ink/5 font-mono text-ink/80">
@@ -182,11 +183,12 @@ export default function DataInspection() {
                         </div>
 
                         {/* Footer */}
-                        <div className="p-4 border-t border-ink/10 bg-ink/5 text-xs text-ink/40 text-center font-mono rounded-b-xl">
+                        <div className="p-4 border-t border-ink/10 bg-ink/5 text-xs text-ink/40 text-center font-mono rounded-b-xl shrink-0">
                             Source: <a href="https://online.stat.psu.edu/stat462/sites/onlinecourses.science.psu.edu.stat462/files/data/bloodpress/index.txt" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">bloodpress.txt</a>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );

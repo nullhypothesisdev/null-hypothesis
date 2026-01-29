@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion, Variants } from "framer-motion";
 
 
@@ -12,6 +13,17 @@ export default function Logo({ className = "", size = 40, fluid = false }: { cla
         ? { width: "100%", height: "auto", aspectRatio: "777 / 560" }
         : { width, height: size };
 
+    const [hasPlayed, setHasPlayed] = useState(false);
+
+    useEffect(() => {
+        const played = sessionStorage.getItem("LOGO_PLAYED");
+        if (played) {
+            setHasPlayed(true);
+        } else {
+            sessionStorage.setItem("LOGO_PLAYED", "true");
+        }
+    }, []);
+
     const iconVariants: Variants = {
         hidden: {
             pathLength: 0,
@@ -23,9 +35,9 @@ export default function Logo({ className = "", size = 40, fluid = false }: { cla
             fillOpacity: 1,
             strokeOpacity: 1,
             transition: {
-                pathLength: { duration: 2.5, ease: "easeInOut" },
-                fillOpacity: { duration: 0.8, delay: 2.0, ease: "easeOut" },
-                strokeOpacity: { duration: 0.1 }
+                pathLength: { duration: hasPlayed ? 0 : 2.5, ease: "easeInOut" },
+                fillOpacity: { duration: hasPlayed ? 0 : 0.8, delay: hasPlayed ? 0 : 2.0, ease: "easeOut" },
+                strokeOpacity: { duration: hasPlayed ? 0 : 0.1 }
             }
         }
     };
