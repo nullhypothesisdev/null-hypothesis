@@ -43,8 +43,45 @@ function erf(x: number) {
   return sign * (1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x));
 }
 
-export default function PValueDistribution() {
-  const { t, dir } = useLanguage();
+
+interface PValueLabels {
+  title: string;
+  desc: string;
+  effect_size: string;
+  null_true: string;
+  null_false: string;
+  run_button: string;
+  waiting: string;
+  ai_prompt: string;
+  ai_context_simulation: string;
+  ai_context_null_true: string;
+  ai_context_null_false: string;
+  ai_context_data_generated: string;
+  ai_context_no_data: string;
+  ai_context_skewed: string;
+  ai_context_uniform: string;
+  ai_context_none: string;
+}
+
+export default function PValueDistribution({ labels = {
+  title: "The Long Run",
+  desc: "What happens if we repeat the experiment 2,000 times?",
+  effect_size: "Effect Size",
+  null_true: "H0 is True (No Effect)",
+  null_false: "H1 is True (Real Effect)",
+  run_button: "Run 2,000 Trials",
+  waiting: "Waiting for simulation...",
+  ai_prompt: "Analyze the distribution of P-Values. If H0 is true, what shape should we see? If H1 is true, what does the skew mean for statistical power?",
+  ai_context_simulation: "P-Value Distribution",
+  ai_context_null_true: "Null Hypothesis True",
+  ai_context_null_false: "Alternative Hypothesis True",
+  ai_context_data_generated: "Data was generated",
+  ai_context_no_data: "No data yet",
+  ai_context_skewed: "Right Skewed (High density at low p-values)",
+  ai_context_uniform: "Uniform-ish or unsure",
+  ai_context_none: "None"
+} }: { labels?: PValueLabels }) {
+  const { dir } = useLanguage();
   const [effectSize, setEffectSize] = useState(0);
   const [data, setData] = useState<{ bin: string; count: number; pRange: number }[]>([]);
   const [isRunning, setIsRunning] = useState(false);
@@ -65,15 +102,15 @@ export default function PValueDistribution() {
       <div className="flex flex-col lg:flex-row justify-between mb-6 md:mb-8 gap-6 md:gap-12">
         <div className="w-full lg:w-1/3 space-y-6 md:space-y-8">
           <div>
-            <h3 className="font-serif text-xl md:text-2xl text-ink mb-2">{t('inf.dist.title') || "The Long Run"}</h3>
+            <h3 className="font-serif text-xl md:text-2xl text-ink mb-2">{labels.title}</h3>
             <p className="font-serif text-xs md:text-sm text-ink/70 leading-relaxed">
-              {t('inf.dist.desc') || "What happens if we repeat the experiment 2,000 times?"}
+              {labels.desc}
             </p>
           </div>
 
           <div>
             <div className="flex justify-between text-xs font-mono mb-2 text-ink/60">
-              <span>{t('inf.dist.effect') || "Effect Size"} (<Latex>$\delta$</Latex>)</span>
+              <span>{labels.effect_size} (<Latex>$\delta$</Latex>)</span>
               <span dir="ltr">{effectSize}</span>
             </div>
             <input
@@ -82,7 +119,7 @@ export default function PValueDistribution() {
               className="w-full h-1.5 bg-ink/10 rounded-lg appearance-none cursor-pointer accent-accent"
             />
             <p className="text-[10px] text-ink/40 mt-1">
-              {effectSize === 0 ? (t('inf.dist.null_true') || "H0 is True (No Effect)") : (t('inf.dist.null_false') || "H1 is True (Real Effect)")}
+              {effectSize === 0 ? labels.null_true : labels.null_false}
             </p>
           </div>
 
@@ -91,7 +128,7 @@ export default function PValueDistribution() {
             className="w-full py-3 bg-ink text-paper rounded-lg font-mono text-xs uppercase tracking-widest hover:bg-accent transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {isRunning ? <RotateCcw className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3 rtl:rotate-180" />}
-            {t('inf.dist.run') || "Run 2,000 Trials"}
+            {labels.run_button}
           </button>
         </div>
 
@@ -110,7 +147,7 @@ export default function PValueDistribution() {
             </ResponsiveContainer>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-ink/30 font-mono text-xs uppercase">
-              {t('inf.dist.waiting') || "Waiting for simulation..."}
+              {labels.waiting}
             </div>
           )}
         </div>
@@ -119,17 +156,17 @@ export default function PValueDistribution() {
       <LabPartner
         title="Analysis"
         context={{
-          simulation: "P-Value Distribution",
+          simulation: labels.ai_context_simulation,
           effectSize: effectSize,
           numberOfSimulations: 2000,
-          hypothesis: effectSize === 0 ? "Null Hypothesis True" : "Alternative Hypothesis True",
-          observation: data.length > 0 ? "Data was generated" : "No data yet",
+          hypothesis: effectSize === 0 ? labels.ai_context_null_true : labels.ai_context_null_false,
+          observation: data.length > 0 ? labels.ai_context_data_generated : labels.ai_context_no_data,
           // Adding a summary of the distribution shape for the AI
           distributionSummary: data.length > 0 ? (
-            data[0].count > data[19].count ? "Right Skewed (High density at low p-values)" : "Uniform-ish or unsure"
-          ) : "None"
+            data[0].count > data[19].count ? labels.ai_context_skewed : labels.ai_context_uniform
+          ) : labels.ai_context_none
         }}
-        defaultPrompt="Analyze the distribution of P-Values. If H0 is true, what shape should we see? If H1 is true, what does the skew mean for statistical power?"
+        defaultPrompt={labels.ai_prompt}
       />
     </div>
   );

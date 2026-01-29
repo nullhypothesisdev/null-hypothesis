@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { fetchLabs, fetchLabBySlug } from "@/lib/data-new";
-import ContentRenderer from "@/components/cms/ContentRenderer";
+import { CompileMDX } from "@/components/mdx/CompileMDX";
+import { MDXComponents } from "@/components/mdx/MDXComponents";
 import { ArrowLeft, Microscope, Activity } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
@@ -111,7 +112,7 @@ export default async function LabPage({ params }: PageProps) {
 
                     <div className="prose prose-lg prose-ink max-w-none">
                         {lab.content_en ? (
-                            <ContentRenderer contentEn={lab.content_en} />
+                            <CompileMDX source={lab.content_en} components={MDXComponents} />
                         ) : (
                             <p className="text-ink/40 italic">Content loading...</p>
                         )}

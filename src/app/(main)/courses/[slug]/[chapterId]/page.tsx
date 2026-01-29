@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
 import CourseSidebar from "@/components/islp/layout/CourseSidebar";
-import VideoPlaceholder from "@/components/islp/layout/VideoPlaceholder";
+
 import { CompileMDX } from "@/components/mdx/CompileMDX";
 import { MDXComponents } from "@/components/mdx/MDXComponents";
 import { CourseComponents } from "@/components/mdx/CourseComponents";
@@ -96,7 +96,7 @@ export default async function ChapterPage({ params }: PageProps) {
                     </div>
 
                     {/* Center: Main Content */}
-                    <main className="lg:col-span-6 space-y-12">
+                    <main className="lg:col-span-9 space-y-12">
                         {/* Breadcrumb */}
                         <Link href={`/courses/${course.slug}`} className="inline-flex items-center gap-2 text-ink/50 hover:text-accent mb-4 transition-colors font-mono text-xs uppercase tracking-widest group">
                             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -166,11 +166,6 @@ export default async function ChapterPage({ params }: PageProps) {
                             )}
                         </div>
                     </main>
-
-                    {/* Right Sidebar: Video */}
-                    <div className="hidden lg:block lg:col-span-3">
-                        <VideoPlaceholder />
-                    </div>
 
                 </div>
             </div>

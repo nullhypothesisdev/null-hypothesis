@@ -27,15 +27,20 @@ export default async function Page() {
 
     const { data: project } = await supabase
         .from('projects')
-        .select('title, tagline, category')
+        .select('title, tagline, category, icon_name, theme_color')
         .eq('slug', 'vital-predictor')
         .single();
 
     const headerData = {
         title: project?.title || "The Vital Predictor",
         tagline: project?.tagline || "Uncovering the statistical determinants of hypertension.",
-        category: project?.category || "Biostatistics"
+        category: project?.category || "Biostatistics",
+        // Fallback or dynamic
+        icon: (project?.icon_name && (MDX_COMPONENTS as any)[project.icon_name]) ? (MDX_COMPONENTS as any)[project.icon_name] : Activity,
+        color: project?.theme_color || "text-accent"
     };
+
+    const HeaderIcon = headerData.icon;
 
     return (
         <PageLayoutWrapper>
@@ -44,8 +49,8 @@ export default async function Page() {
                 backHref="/studies"
                 category={{
                     label: headerData.category,
-                    icon: <Activity className="w-5 h-5" />,
-                    color: "text-accent"
+                    icon: <HeaderIcon className="w-5 h-5" />,
+                    color: headerData.color
                 }}
                 title={headerData.title}
                 tagline={headerData.tagline}

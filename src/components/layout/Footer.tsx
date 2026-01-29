@@ -92,7 +92,7 @@ export default function Footer() {
 
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
             <p className="font-mono text-xs text-ink/40 uppercase tracking-widest text-center md:text-start">
-              &copy; {currentYear} {t('footer.rights_reserved') || "All Rights Reserved."} Created by <a href="https://ezzio.me" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors border-b border-transparent hover:border-accent">Ezz Eldin Ahmed</a>.
+              &copy; {currentYear} <Link href="/" className="hover:text-accent transition-colors">The Null Hypothesis</Link>. {t('footer.rights_reserved') || "All Rights Reserved."}
             </p>
           </div>
 

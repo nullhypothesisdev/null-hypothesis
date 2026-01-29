@@ -1,11 +1,12 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
+const nextConfig: NextConfig = {
   // Ensure we are using output: 'export' if deploying statically (e.g., to Vercel/GitHub Pages)
   // output: 'export', 
 
   images: {
     remotePatterns: [
-      // Existing patterns (if any) should be here.
       {
         protocol: 'https',
         hostname: 'cdn.sanity.io',
@@ -25,4 +26,6 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})(nextConfig);

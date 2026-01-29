@@ -20,8 +20,35 @@ function cdf(x: number, mean: number, std: number) {
   return z > 0 ? 1 - prob : prob;
 }
 
-export default function PowerAnalysis() {
-  const { t, dir } = useLanguage();
+
+interface PowerAnalysisLabels {
+  title: string;
+  desc: string;
+  type1: string;
+  type2: string;
+  power: string;
+  critical_value: string;
+  effect_size: string;
+  ai_prompt: string;
+  ai_context_simulation: string;
+  ai_context_high_power: string;
+  ai_context_low_power: string;
+}
+
+export default function PowerAnalysis({ labels = {
+  title: "Power Analysis",
+  desc: "Move the threshold (c) to balance α vs. β.",
+  type1: "Type I Risk",
+  type2: "Type II Risk",
+  power: "Power",
+  critical_value: "Critical Value",
+  effect_size: "Effect Size",
+  ai_prompt: "Analyze the current trade-off between Type I and Type II errors. How does the Effect Size impact the Power in this configuration?",
+  ai_context_simulation: "Statistical Power Analysis",
+  ai_context_high_power: "High Power (Good chance of detecting effect)",
+  ai_context_low_power: "Low Power (High risk of Type II error)"
+} }: { labels?: PowerAnalysisLabels }) {
+  const { dir } = useLanguage();
   const [criticalValue, setCriticalValue] = useState(1.65);
   const [effectSize, setEffectSize] = useState(3);
   const stdErr = 1;
@@ -83,27 +110,27 @@ export default function PowerAnalysis() {
       <div className="flex flex-col md:flex-row justify-between mb-6 md:mb-8 gap-4">
         <div>
           <h3 className="font-serif text-xl md:text-2xl text-ink flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 md:w-5 md:h-5 text-accent" /> {t('inf.power.title') || "Power Analysis"}
+            <ShieldAlert className="w-4 h-4 md:w-5 md:h-5 text-accent" /> {labels.title}
           </h3>
           <p className="text-xs md:text-sm text-ink/60 mt-2 font-serif">
-            {t('inf.power.desc') || "Move the threshold (c) to balance α vs. β."}
+            {labels.desc}
           </p>
         </div>
 
         {/* STATS BADGE - Adjusted padding/gap for mobile density */}
         <div className="flex gap-4 md:gap-6 bg-ink/5 p-3 md:p-4 rounded-xl border border-ink/5 w-full md:w-auto justify-between">
           <div className="text-center">
-            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-widest text-ink/40 mb-1">{t('inf.alpha.t1') || "Type I Risk"} (α)</div>
+            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-widest text-ink/40 mb-1">{labels.type1} (α)</div>
             <div className="text-lg md:text-xl font-bold font-mono text-red-600" dir="ltr">{alpha.toFixed(3)}</div>
           </div>
           <div className="w-[1px] bg-ink/10"></div>
           <div className="text-center">
-            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-widest text-ink/40 mb-1">{t('inf.alpha.t2') || "Type II Risk"} (β)</div>
+            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-widest text-ink/40 mb-1">{labels.type2} (β)</div>
             <div className="text-lg md:text-xl font-bold font-mono text-blue-600" dir="ltr">{beta.toFixed(3)}</div>
           </div>
           <div className="w-[1px] bg-ink/10"></div>
           <div className="text-center">
-            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-widest text-ink/40 mb-1">{t('inf.power.power') || "Power"}</div>
+            <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-widest text-ink/40 mb-1">{labels.power}</div>
             <div className="text-lg md:text-xl font-bold font-mono text-emerald-600" dir="ltr">{power.toFixed(3)}</div>
           </div>
         </div>
@@ -142,14 +169,14 @@ export default function PowerAnalysis() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         <div>
           <div className="flex justify-between text-xs font-mono mb-2 text-ink/60">
-            <span>{t('inf.power.crit') || "Critical Value"}</span>
+            <span>{labels.critical_value}</span>
             <span dir="ltr">{criticalValue.toFixed(2)}</span>
           </div>
           <input type="range" min="0" max="6" step="0.05" value={criticalValue} onChange={(e) => setCriticalValue(parseFloat(e.target.value))} className="w-full h-1.5 bg-ink/10 rounded-lg appearance-none cursor-pointer accent-ink" />
         </div>
         <div>
           <div className="flex justify-between text-xs font-mono mb-2 text-ink/60">
-            <span>{t('inf.power.effect') || "Effect Size"} (<Latex>$\theta$</Latex>)</span>
+            <span>{labels.effect_size} (<Latex>$\theta$</Latex>)</span>
             <span dir="ltr">{effectSize.toFixed(1)}</span>
           </div>
           <input type="range" min="0.5" max="6" step="0.1" value={effectSize} onChange={(e) => setEffectSize(parseFloat(e.target.value))} className="w-full h-1.5 bg-ink/10 rounded-lg appearance-none cursor-pointer accent-accent" />
@@ -159,17 +186,17 @@ export default function PowerAnalysis() {
       <LabPartner
         title="Power Analysis Insights"
         context={{
-          simulation: "Statistical Power Analysis",
+          simulation: labels.ai_context_simulation,
           alpha: alpha,
           beta: beta,
           power: power,
           effectSize: effectSize,
           criticalValue: criticalValue,
           interpretation: power > 0.8
-            ? "High Power (Good chance of detecting effect)"
-            : "Low Power (High risk of Type II error)"
+            ? labels.ai_context_high_power
+            : labels.ai_context_low_power
         }}
-        defaultPrompt="Analyze the current trade-off between Type I and Type II errors. How does the Effect Size impact the Power in this configuration?"
+        defaultPrompt={labels.ai_prompt}
       />
     </div>
   );

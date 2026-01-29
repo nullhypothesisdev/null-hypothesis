@@ -5,6 +5,7 @@ import { Cormorant_Garamond, EB_Garamond, JetBrains_Mono } from "next/font/googl
 import { Providers } from "@/components/providers/Providers";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import "katex/dist/katex.min.css";
+import "computer-modern/cmu-serif.css";
 import "./globals.css";
 
 // 1. HEADINGS (Serif Display) - For Titles
@@ -60,7 +61,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "The Null Hypothesis",
     description: "Reject the default. A data science platform for the rigorous.",
-    creator: '@theonlyezzio',
+    creator: 'The Null Hypothesis',
     images: ['/api/og?title=The%20Null%20Hypothesis'],
   },
 };
@@ -74,7 +75,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/cmu-serif.min.css" />
+
       </head>
       <body
         className={`

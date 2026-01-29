@@ -7,8 +7,8 @@ import { MDXComponents } from "@/components/mdx/MDXComponents";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-  title: 'Maximum Likelihood | Ezz Eldin',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://nullhypothesis.dev'),
+  title: 'Confidence Intervals | The Null Hypothesis',
 };
 
 export default async function EstimationLabPage() {

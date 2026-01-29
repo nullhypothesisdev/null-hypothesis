@@ -148,6 +148,8 @@ export default function HomeClient({ hero, coursesData, labs, projects }: HomeCl
                                                 src={coursesData[0].cover_image_url}
                                                 alt={coursesData[0].title}
                                                 fill
+                                                priority={true}
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                                 className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                                             />
                                         </>

@@ -17,9 +17,66 @@ const generateHypothesis = () => ({
     condition: CONDITIONS[Math.floor(Math.random() * CONDITIONS.length)]
 });
 
-export default function HackSimulation() {
-    const { t, dir } = useLanguage();
-    const [currentHypothesis, setCurrentHypothesis] = useState(generateHypothesis());
+
+interface HackLabels {
+    experiments_run: string;
+    reset: string;
+    testing_hypothesis: string;
+    hypothesis_prefix: string;
+    hypothesis_connector: string;
+    hypothesis_question: string;
+    analyzing: string;
+    sig_result: string;
+    insig_result: string;
+    running: string;
+    run_button: string;
+    ref_link: string;
+    published_list: string;
+    published_empty: string;
+    discarded_list: string;
+    discarded_desc: string;
+    // New Props for randomness and AI
+    colors: string[];
+    conditions: string[];
+    ai_prompt: string;
+    ai_context_simulation: string;
+    ai_context_conclusion_sig: string;
+    ai_context_conclusion_insig: string;
+}
+
+export default function HackSimulation({ labels = {
+    experiments_run: "Experiments Run",
+    reset: "Reset",
+    testing_hypothesis: "Current Hypothesis",
+    hypothesis_prefix: "",
+    hypothesis_connector: "Jelly Beans Cause",
+    hypothesis_question: "?",
+    analyzing: "Collecting Data...",
+    sig_result: "Significant!",
+    insig_result: "Not Significant",
+    running: "Running...",
+    run_button: "Test Hypothesis",
+    ref_link: "Ref: xkcd #882",
+    published_list: "Published Findings",
+    published_empty: "No significant results yet...",
+    discarded_list: "Discarded Data",
+    discarded_desc: "Failed experiments that never see the light of day.",
+    colors: ["Purple", "Green", "Red", "Blue", "Yellow", "Orange", "Black", "White", "Pink", "Cyan"],
+    conditions: ["Acne", "Hair Loss", "High IQ", "Laziness", "Happiness", "Insomnia"],
+    ai_prompt: "Review the 'published' findings versus the 'discarded' experiments. Explain why selecting only significant results from many random trials leads to false scientific conclusions.",
+    ai_context_simulation: "P-Hacking / Data Dredging",
+    ai_context_conclusion_sig: "Spurious correlations found",
+    ai_context_conclusion_insig: "No significance yet"
+} }: { labels?: HackLabels }) {
+    const { dir } = useLanguage();
+
+    // Moved generators inside to use props
+    const generateHypothesis = () => ({
+        color: labels.colors[Math.floor(Math.random() * labels.colors.length)],
+        condition: labels.conditions[Math.floor(Math.random() * labels.conditions.length)]
+    });
+
+    const [currentHypothesis, setCurrentHypothesis] = useState(() => generateHypothesis()); // Lazy init to use fresh props
     const [pValue, setPValue] = useState<number | null>(null);
     const [published, setPublished] = useState<{ id: number, text: string, p: number }[]>([]);
     const [trashCount, setTrashCount] = useState(0);
@@ -40,7 +97,7 @@ export default function HackSimulation() {
             setPublished(prev => [
                 {
                     id: Date.now(),
-                    text: `${currentHypothesis.color} ${t('hack.hypothesis.jelly')} -> ${currentHypothesis.condition}`,
+                    text: `${currentHypothesis.color} ${labels.hypothesis_connector} -> ${currentHypothesis.condition}`,
                     p
                 },
                 ...prev
@@ -77,7 +134,7 @@ export default function HackSimulation() {
 
                         {/* Status: Experiments Run */}
                         <div className="text-[10px] font-mono text-ink/50 uppercase tracking-widest">
-                            {t('hack.status.experiments') || "Experiments Run"}: <span className="text-ink">{attempts}</span>
+                            {labels.experiments_run}: <span className="text-ink">{attempts}</span>
                         </div>
 
                         {/* FIX 1: RESET BUTTON */}
@@ -86,16 +143,16 @@ export default function HackSimulation() {
                             className="flex items-center gap-1.5 px-3 py-1 bg-paper border border-ink/10 rounded-full text-[10px] font-mono uppercase tracking-wider text-ink/70 hover:bg-red-500/10 hover:text-red-600 transition-colors"
                         >
                             <RotateCcw className="w-3 h-3" />
-                            {t('common.reset') || "Reset"}
+                            {labels.reset}
                         </button>
                     </div>
 
                     {/* MAIN CONTENT AREA */}
                     <div className="text-center space-y-6 max-w-sm z-10 pt-16 md:pt-24 pb-8 md:pb-0">
                         <div className="space-y-2">
-                            <span className="text-accent text-xs font-mono uppercase tracking-widest">{t('hack.lab.testing') || "Current Hypothesis"}</span>
+                            <span className="text-accent text-xs font-mono uppercase tracking-widest">{labels.testing_hypothesis}</span>
                             <h3 className="text-2xl md:text-3xl font-serif leading-tight text-ink">
-                                "{t('hack.hypothesis.prefix')} <span className="text-accent">{currentHypothesis.color}</span> {t('hack.hypothesis.jelly')} {t('hack.hypothesis.cause_q')} <span className="text-accent">{currentHypothesis.condition}</span>?"
+                                "{labels.hypothesis_prefix} <span className="text-accent">{currentHypothesis.color}</span> {labels.hypothesis_connector} {labels.hypothesis_question} <span className="text-accent">{currentHypothesis.condition}</span>?"
                             </h3>
                         </div>
 
@@ -103,7 +160,7 @@ export default function HackSimulation() {
                             <AnimatePresence mode="wait">
                                 {isRunning && !pValue ? (
                                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-ink/40 font-mono text-sm animate-pulse">
-                                        {t('hack.lab.analyzing') || "Collecting Data..."}
+                                        {labels.analyzing}
                                     </motion.div>
                                 ) : pValue !== null ? (
                                     <motion.div
@@ -113,7 +170,7 @@ export default function HackSimulation() {
                                     >
                                         <span className="text-4xl font-mono font-bold" dir="ltr">p = {pValue.toFixed(3)}</span>
                                         <span className="text-xs font-sans uppercase tracking-widest mt-2 font-bold">
-                                            {pValue < 0.05 ? t('hack.result.sig') : t('hack.result.insig')}
+                                            {pValue < 0.05 ? labels.sig_result : labels.insig_result}
                                         </span>
                                     </motion.div>
                                 ) : (
@@ -124,7 +181,7 @@ export default function HackSimulation() {
 
                         <button onClick={runExperiment} disabled={isRunning} className="group relative px-8 py-4 bg-accent text-paper rounded-full font-bold font-mono text-xs uppercase tracking-widest hover:bg-ink hover:text-white transition-all w-full overflow-hidden disabled:opacity-50">
                             <span className="relative z-10 flex items-center justify-center gap-2">
-                                {isRunning ? t('common.running') : t('hack.btn.run')}
+                                {isRunning ? labels.running : labels.run_button}
                                 {!isRunning && <Play className="w-3 h-3 rtl:rotate-180" />}
                             </span>
                         </button>
@@ -137,7 +194,7 @@ export default function HackSimulation() {
                         rel="noopener noreferrer"
                         className="absolute bottom-4 left-6 rtl:left-auto rtl:right-6 text-[10px] font-mono text-ink/40 hover:text-accent flex items-center gap-1 transition-colors"
                     >
-                        {t('exp.inference.s5.ref') || "Ref: xkcd #882"} <ExternalLink className="w-2 h-2" />
+                        {labels.ref_link} <ExternalLink className="w-2 h-2" />
                     </a>
                 </div>
 
@@ -149,7 +206,7 @@ export default function HackSimulation() {
                     <div className="flex-1 p-6 overflow-hidden flex flex-col">
                         <div className="flex items-center justify-between mb-4 border-b border-ink/10 pb-2">
                             <span className="text-xs font-mono text-green-700 uppercase tracking-widest flex items-center gap-2">
-                                <CheckCircle className="w-3 h-3" /> {t('hack.list.published')}
+                                <CheckCircle className="w-3 h-3" /> {labels.published_list}
                             </span>
                             <span className="text-ink font-mono text-xs">{published.length}</span>
                         </div>
@@ -170,7 +227,7 @@ export default function HackSimulation() {
                                 {published.length === 0 && (
                                     <div className="text-center mt-10 opacity-20 text-ink/20">
                                         <FileText className="w-8 h-8 mx-auto mb-2" />
-                                        <span className="text-xs font-mono">{t('hack.list.empty')}</span>
+                                        <span className="text-xs font-mono">{labels.published_empty}</span>
                                     </div>
                                 )}
                             </AnimatePresence>
@@ -182,10 +239,10 @@ export default function HackSimulation() {
                         <div className="relative z-10 flex justify-between items-start">
                             <div>
                                 <span className="text-xs font-mono text-red-700/50 uppercase tracking-widest flex items-center gap-2 mb-1">
-                                    <Trash2 className="w-3 h-3" /> {t('hack.list.discarded')}
+                                    <Trash2 className="w-3 h-3" /> {labels.discarded_list}
                                 </span>
                                 <div className="text-[10px] text-ink/30 max-w-[150px] leading-tight">
-                                    {t('hack.list.discarded_desc')}
+                                    {labels.discarded_desc}
                                 </div>
                             </div>
                             <div className="text-4xl font-mono font-bold text-ink/10 group-hover:text-red-900/50 transition-colors">
@@ -205,14 +262,14 @@ export default function HackSimulation() {
                 <LabPartner
                     title="P-Hacking Detector"
                     context={{
-                        simulation: "P-Hacking / Data Dredging",
+                        simulation: labels.ai_context_simulation,
                         experimentsRun: attempts,
                         significantFindings: published.length,
                         discardedFindings: trashCount,
                         minPValue: published.length > 0 ? Math.min(...published.map(p => p.p)) : "N/A",
-                        conclusion: published.length > 0 ? "Spurious correlations found" : "No significance yet"
+                        conclusion: published.length > 0 ? labels.ai_context_conclusion_sig : labels.ai_context_conclusion_insig
                     }}
-                    defaultPrompt="Review the 'published' findings versus the 'discarded' experiments. Explain why selecting only significant results from many random trials leads to false scientific conclusions."
+                    defaultPrompt={labels.ai_prompt}
                 />
             </div>
         </div>

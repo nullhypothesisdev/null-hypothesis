@@ -1,7 +1,16 @@
 import { MDX_COMPONENTS as BaseComponents } from "./MDXComponents";
 
+import CaseStudyGrid from "@/components/islp/introduction/CaseStudyGrid";
+import CodexTable from "@/components/islp/introduction/CodexTable";
+import HistoricalTimeline from "@/components/islp/introduction/HistoricalTimeline";
+
 export const CourseComponents = {
     ...BaseComponents,
+
+    // ISLP Components
+    CaseStudyGrid,
+    CodexTable,
+    HistoricalTimeline,
 
     // Header 2 (Major Section Headers) - Matches "The Prologue" / "The Three Problems" style
     h2: (props: any) => (

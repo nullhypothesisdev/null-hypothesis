@@ -29,8 +29,39 @@ type Interval = {
   hit: boolean;
 };
 
-export default function ConfidenceIntervals() {
-  const { t, dir } = useLanguage();
+
+interface ConfidenceIntervalsLabels {
+  title: string;
+  desc: string;
+  confidence_level: string;
+  sample_size: string;
+  start_btn: string;
+  waiting: string;
+  true_mean: string;
+  capture_rate: string;
+  total_samples: string;
+  ai_prompt: string;
+  ai_context_simulation: string;
+  ai_context_calibrated: string;
+  ai_context_variance: string;
+}
+
+export default function ConfidenceIntervals({ labels = {
+  title: "Coverage Simulation",
+  desc: "A 95% Confidence Interval does not mean \"There is a 95% chance the parameter is here.\" It means: \"If we dropped 100 intervals, 95 of them would catch the line.\"",
+  confidence_level: "Confidence Level",
+  sample_size: "Sample Size",
+  start_btn: "Start",
+  waiting: "Awaiting Data Stream...",
+  true_mean: "(True Mean)",
+  capture_rate: "Capture Rate",
+  total_samples: "Total Samples",
+  ai_prompt: "We ran a simulation of confidence intervals. Explain why the 'Capture Rate' (percentage of intervals that hit the mean) tends to converge to the 'Confidence Level' over the long run.",
+  ai_context_simulation: "Confidence Intervals Coverage",
+  ai_context_calibrated: "Calibrated (Coverage matches confidence)",
+  ai_context_variance: "Variance (Small sample run variance)"
+} }: { labels?: ConfidenceIntervalsLabels }) {
+  const { dir } = useLanguage();
   const [intervals, setIntervals] = useState<Interval[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [runCount, setRunCount] = useState(0);
@@ -79,16 +110,16 @@ export default function ConfidenceIntervals() {
 
         <div className="lg:w-1/3 space-y-6 md:space-y-8">
           <div>
-            <h3 className="font-serif text-xl md:text-2xl text-ink mb-2">{t('inf.ci.title') || "Coverage Simulation"}</h3>
+            <h3 className="font-serif text-xl md:text-2xl text-ink mb-2">{labels.title}</h3>
             <p className="text-sm md:text-lg text-ink/70 leading-relaxed font-serif">
-              {t('inf.ci.desc') || "A 95% Confidence Interval does not mean \"There is a 95% chance the parameter is here.\" It means: \"If we dropped 100 intervals, 95 of them would catch the line.\""}
+              {labels.desc}
             </p>
           </div>
 
           {/* Controls */}
           <div className="bg-ink/5 p-4 md:p-6 rounded-lg border border-ink/5 space-y-4 md:space-y-6">
             <div>
-              <label className="block text-xs font-mono uppercase tracking-widest text-ink/50 mb-3">{t('inf.ci.confidence') || "Confidence Level"}</label>
+              <label className="block text-xs font-mono uppercase tracking-widest text-ink/50 mb-3">{labels.confidence_level}</label>
               <div className="flex gap-2">
                 {[0.90, 0.95, 0.99].map((val) => (
                   <button
@@ -107,7 +138,7 @@ export default function ConfidenceIntervals() {
 
             <div>
               <div className="flex justify-between text-xs font-mono mb-2 uppercase tracking-widest text-ink/50">
-                <span>{t('inf.dist.sample') || "Sample Size"} (n)</span>
+                <span>{labels.sample_size}</span>
                 <span>{sampleSize}</span>
               </div>
               <input
@@ -123,7 +154,7 @@ export default function ConfidenceIntervals() {
               disabled={isRunning}
               className="w-full py-3 md:py-4 bg-ink text-paper font-mono text-xs uppercase tracking-widest hover:bg-accent transition-colors border border-ink disabled:opacity-50"
             >
-              {isRunning ? (t('common.running') || "Running...") : (t('common.start') || "Start")}
+              {isRunning ? (labels.waiting || "Running...") : labels.start_btn}
             </button>
           </div>
         </div>
@@ -134,7 +165,7 @@ export default function ConfidenceIntervals() {
           {/* True Mean Line */}
           <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-ink/80 z-10 border-r border-dashed border-ink/20"></div>
           <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-ink text-paper px-2 py-1 text-[9px] md:text-[10px] font-mono z-20">
-            <Latex>$\mu$</Latex> {t('inf.ci.true_mean') || "(True Mean)"}
+            <Latex>$\mu$</Latex> {labels.true_mean}
           </div>
 
           <div className="absolute inset-0 p-6 flex flex-col justify-evenly">
@@ -178,7 +209,7 @@ export default function ConfidenceIntervals() {
 
             {intervals.length === 0 && (
               <div className="absolute inset-0 flex items-center justify-center text-ink/20 font-serif text-lg md:text-2xl italic px-4 text-center">
-                {t('inf.ci.waiting') || "Awaiting Data Stream..."}
+                {labels.waiting}
               </div>
             )}
           </div>
@@ -186,14 +217,14 @@ export default function ConfidenceIntervals() {
           {/* Stats Overlay */}
           <div className="absolute bottom-2 md:bottom-4 right-2 md:right-4 bg-paper border border-ink/10 p-2 md:p-4 rounded shadow-sm text-right">
             <div className="text-[9px] md:text-[10px] font-mono uppercase tracking-widest text-ink/40 mb-1">
-              {t('inf.ci.rate') || "Capture Rate"}
+              {labels.capture_rate}
             </div>
             <div className={`text-2xl md:text-4xl font-mono font-bold ${Math.abs(successRate - confidenceLevel * 100) < 5 ? "text-emerald-700" : "text-red-700"
               }`} dir="ltr">
               {successRate.toFixed(0)}%
             </div>
             <div className="text-[9px] md:text-[10px] text-ink/30 font-mono mt-1 md:mt-2">
-              {t('inf.ci.total') || "Total Samples"}: {runCount}
+              {labels.total_samples}: {runCount}
             </div>
           </div>
 
@@ -203,16 +234,16 @@ export default function ConfidenceIntervals() {
       <LabPartner
         title="Coverage Analysis"
         context={{
-          simulation: "Confidence Intervals Coverage",
+          simulation: labels.ai_context_simulation,
           targetConfidence: confidenceLevel,
           actualCoverageRate: successRate / 100,
           sampleSize: sampleSize,
           totalTrials: runCount,
           interpretation: Math.abs(successRate - (confidenceLevel * 100)) < 5
-            ? "Calibrated (Coverage matches confidence)"
-            : "Variance (Small sample run variance)"
+            ? labels.ai_context_calibrated
+            : labels.ai_context_variance
         }}
-        defaultPrompt="We ran a simulation of confidence intervals. Explain why the 'Capture Rate' (percentage of intervals that hit the mean) tends to converge to the 'Confidence Level' over the long run."
+        defaultPrompt={labels.ai_prompt}
       />
     </div>
   );

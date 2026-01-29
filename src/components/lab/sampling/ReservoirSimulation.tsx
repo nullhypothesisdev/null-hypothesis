@@ -5,8 +5,34 @@ import { Play, Pause, RefreshCw, Settings2, Activity } from "lucide-react";
 import Latex from "react-latex-next";
 import { useLanguage } from "@/contexts/LanguageContext"; // Use translations
 
-export default function ReservoirSimulation() {
-  const { t } = useLanguage();
+interface ReservoirSimulationLabels {
+  controls: string;
+  control_size: string;
+  control_velocity: string;
+  logic: string;
+  prob: string;
+  bucket_status: string;
+  pause: string;
+  initiate: string;
+  stream_label: string;
+  empty_slot_label: string;
+  reset_tooltip: string;
+}
+
+export default function ReservoirSimulation({ labels = {
+  controls: "System Controls",
+  control_size: "Reservoir Size (k)",
+  control_velocity: "Stream Velocity",
+  logic: "Algorithm Logic",
+  prob: "Live Probability",
+  bucket_status: "Reservoir Status",
+  pause: "Pause",
+  initiate: "Initiate",
+  stream_label: "STREAM",
+  empty_slot_label: "Null",
+  reset_tooltip: "Reset System"
+} }: { labels?: ReservoirSimulationLabels }) {
+  const { dir } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -123,13 +149,13 @@ export default function ReservoirSimulation() {
         <div>
           <div className="flex items-center gap-2 mb-8 border-b border-ink/10 pb-4">
             <Settings2 className="w-4 h-4 text-accent" />
-            <h3 className="font-serif text-lg text-ink">{t('sampling.tool.controls') || "System Controls"}</h3>
+            <h3 className="font-serif text-lg text-ink">{labels.controls}</h3>
           </div>
 
           {/* Slider: Size */}
           <div className="mb-8">
             <div className="flex justify-between text-xs font-mono mb-3 uppercase tracking-widest text-ink/60">
-              <span>{t('sampling.control.size') || "Reservoir Size (k)"}</span>
+              <span>{labels.control_size}</span>
               <span className="text-ink font-bold">{k}</span>
             </div>
             <input
@@ -147,7 +173,7 @@ export default function ReservoirSimulation() {
           {/* Slider: Speed */}
           <div className="mb-8">
             <div className="flex justify-between text-xs font-mono mb-3 uppercase tracking-widest text-ink/60">
-              <span>{t('sampling.control.velocity') || "Stream Velocity"}</span>
+              <span>{labels.control_velocity}</span>
               <span className="text-ink font-bold">{speed}x</span>
             </div>
             <input
@@ -163,16 +189,16 @@ export default function ReservoirSimulation() {
           <button
             onClick={() => setIsPlaying(!isPlaying)}
             className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors font-mono text-xs uppercase tracking-widest border ${isPlaying
-                ? "bg-paper border-ink text-ink hover:bg-ink/5"
-                : "bg-ink border-ink text-paper hover:bg-accent hover:border-accent"
+              ? "bg-paper border-ink text-ink hover:bg-ink/5"
+              : "bg-ink border-ink text-paper hover:bg-accent hover:border-accent"
               }`}
           >
-            {isPlaying ? <><Pause className="w-3 h-3" /> {t('common.pause') || "Pause"}</> : <><Play className="w-3 h-3" /> {t('common.initiate') || "Initiate"}</>}
+            {isPlaying ? <><Pause className="w-3 h-3" /> {labels.pause}</> : <><Play className="w-3 h-3" /> {labels.initiate}</>}
           </button>
           <button
             onClick={() => { setIsPlaying(false); setCount(0); setReservoir([]); }}
             className="p-3 border border-ink/10 rounded-lg hover:bg-ink/5 transition-colors text-ink/60 hover:text-ink"
-            title="Reset System"
+            title={labels.reset_tooltip}
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -186,14 +212,14 @@ export default function ReservoirSimulation() {
         {/* Math Monitor */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-ink/5 rounded-xl p-4 border border-ink/5 flex flex-col justify-between">
-            <span className="text-[10px] font-mono text-ink/40 uppercase tracking-widest mb-1">{t('sampling.logic') || "Algorithm Logic"}</span>
+            <span className="text-[10px] font-mono text-ink/40 uppercase tracking-widest mb-1">{labels.logic}</span>
             <div className="text-ink font-serif text-lg" dir="ltr">
               <Latex>{`$$P = \\frac{k}{n}$$`}</Latex>
             </div>
           </div>
           <div className="bg-ink/5 rounded-xl p-4 border border-ink/5 flex flex-col justify-between">
             <span className="text-[10px] font-mono text-ink/40 uppercase tracking-widest mb-1 flex items-center gap-2">
-              <Activity className="w-3 h-3" /> {t('sampling.prob') || "Live Probability"}
+              <Activity className="w-3 h-3" /> {labels.prob}
             </span>
             <span className="text-3xl font-mono text-accent tracking-tight">
               {probability}
@@ -210,14 +236,14 @@ export default function ReservoirSimulation() {
           <canvas ref={canvasRef} width={width} height={224} className="w-full h-full relative z-10 block" />
 
           <div className="absolute top-3 left-3 bg-paper/80 backdrop-blur px-2 py-1 text-[10px] font-mono text-ink/50 border border-ink/10 rounded">
-            STREAM: {count}
+            {labels.stream_label}: {count}
           </div>
         </div>
 
         {/* Bucket */}
         <div className="bg-card border border-ink/10 rounded-xl p-6">
           <span className="text-[10px] font-mono text-ink/40 uppercase tracking-widest block mb-4">
-            {t('sampling.bucket.status') || "Reservoir Status"} (Capacity: {k})
+            {labels.bucket_status} (Capacity: {k})
           </span>
           <div className="flex flex-wrap gap-3">
             {Array.from({ length: k }).map((_, i) => {
@@ -233,7 +259,7 @@ export default function ReservoirSimulation() {
                       {item.id}
                     </div>
                   ) : (
-                    <span className="text-ink/10 text-xs font-serif italic">Null</span>
+                    <span className="text-ink/10 text-xs font-serif italic">{labels.empty_slot_label}</span>
                   )}
                 </div>
               );

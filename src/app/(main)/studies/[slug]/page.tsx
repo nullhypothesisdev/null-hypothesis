@@ -2,7 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { notFound } from "next/navigation";
 import { fetchStudies, fetchStudyBySlug } from "@/lib/data-new";
-import ContentRenderer from "@/components/cms/ContentRenderer";
+import { CompileMDX } from "@/components/mdx/CompileMDX";
+import { MDXComponents } from "@/components/mdx/MDXComponents";
 import { ArrowLeft, Calendar, Tag } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
@@ -113,7 +114,11 @@ export default async function ProjectPage({ params }: PageProps) {
 
                 {/* Content Body */}
                 <div className="bg-paper border border-ink/5 p-8 md:p-12 rounded-sm shadow-sm">
-                    <ContentRenderer contentEn={project.content_en} />
+                    {project.content_en ? (
+                        <CompileMDX source={project.content_en} components={MDXComponents} />
+                    ) : (
+                        <p className="text-ink/40 italic">No content available.</p>
+                    )}
                 </div>
 
             </article>

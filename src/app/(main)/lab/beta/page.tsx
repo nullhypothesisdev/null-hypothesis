@@ -7,9 +7,11 @@ import { MDXComponents } from "@/components/mdx/MDXComponents";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-  title: 'The Shape Shifter | Ezz Eldin',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://nullhypothesis.dev'),
+  title: 'The Beta Distribution | The Null Hypothesis',
 };
+
+export const revalidate = 0;
 
 export default async function BetaLabPage() {
   const SLUG = 'lab/beta';
@@ -35,17 +37,17 @@ export default async function BetaLabPage() {
 
   return (
     <main className="min-h-screen pt-24 md:pt-32 pb-20 px-6 bg-paper font-serif relative overflow-hidden">
-      
+
       {/* Background Texture */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" 
-           style={{ 
-             backgroundImage: `linear-gradient(var(--color-ink) 1px, transparent 1px), linear-gradient(90deg, var(--color-ink) 1px, transparent 1px)`,
-             backgroundSize: '40px 40px'
-           }} 
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(var(--color-ink) 1px, transparent 1px), linear-gradient(90deg, var(--color-ink) 1px, transparent 1px)`,
+          backgroundSize: '40px 40px'
+        }}
       />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        
+
         <PageHeader
           backHref="/lab"
           backLabel="Laboratory Index"
@@ -64,9 +66,9 @@ export default async function BetaLabPage() {
 
         {/* 3. The Content Engine */}
         <div className="max-w-none">
-          <CompileMDX 
-            source={page.content_en} 
-            components={MDXComponents} 
+          <CompileMDX
+            source={page.content_en}
+            components={MDXComponents}
           />
         </div>
 
