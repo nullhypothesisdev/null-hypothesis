@@ -114,14 +114,15 @@ body::after {
     border-color 200ms ease-in-out;
 }
 
-/* Interactive elements - keep them snappy */
+/* Interactive elements - keep them snappy but avoid expensive 'all' */
 button,
 a,
 input,
 textarea,
 select,
 [role="button"] {
-  transition: all 150ms ease-in-out;
+  transition: opacity 150ms ease-in-out,
+    transform 150ms ease-in-out;
 }
 
 /* Custom Scrollbar */
