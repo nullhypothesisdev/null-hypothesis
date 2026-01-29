@@ -104,13 +104,20 @@ body::after {
 }
 
 /* --- THEME TRANSITIONS (Surgical Approach) --- */
-/* Only transition elements that actually change with theme */
-.card,
-[class*="bg-"],
-[class*="text-"],
-[class*="border-"] {
+
+/* 
+   PERFORMANCE OPTIMIZATION:
+   We previously targeted [class*="text-"] etc., which attached transitions 
+   to thousands of elements, killing performance.
+   
+   Now we rely on CSS variable inheritance. 
+   When the theme class on <body> changes, CSS variables update instantly.
+   The transition on <body> handles the global background/color fade.
+   Specific components should only transition if they deviate from the flow.
+*/
+
+.card {
   transition: background-color 200ms ease-in-out,
-    color 200ms ease-in-out,
     border-color 200ms ease-in-out;
 }
 
