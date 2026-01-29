@@ -6,8 +6,6 @@ import PageLayoutWrapper from "@/components/studies/vital-predictor/PageLayoutWr
 import { supabase } from "@/lib/supabase";
 import { Activity } from "lucide-react";
 
-export const revalidate = 0;
-
 // ... (imports remain)
 
 // ... (generateMetadata remains)

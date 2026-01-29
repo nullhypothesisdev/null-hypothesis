@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: 'Sampling Distribution | The Null Hypothesis',
 };
 
-export const revalidate = 0;
 
 export default async function SamplingPage() {
   const SLUG = 'lab/sampling'; // Match your DB

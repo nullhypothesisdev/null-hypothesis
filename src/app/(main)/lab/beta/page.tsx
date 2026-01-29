@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: 'The Beta Distribution | The Null Hypothesis',
 };
 
-export const revalidate = 0;
 
 export default async function BetaLabPage() {
   const SLUG = 'lab/beta';

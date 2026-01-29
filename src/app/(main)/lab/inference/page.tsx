@@ -11,8 +11,6 @@ export const metadata: Metadata = {
   title: 'The Crisis of Significance | The Null Hypothesis',
 };
 
-export const revalidate = 0;
-
 export default async function InferenceLabPage() {
   const SLUG = 'lab/inference';
 
