@@ -71,7 +71,6 @@ export default function Footer() {
                 { href: '/', label: t('nav.home'), Icon: Layout },
                 { href: '/lab', label: t('nav.labs'), Icon: FlaskConical },
                 { href: '/studies', label: t('nav.case_files'), Icon: Activity },
-                { href: '/courses', label: t('nav.courses'), Icon: BookOpen },
                 { href: '/about', label: t('nav.about') || 'About', Icon: Globe },
               ].map(({ href, label, Icon }) => (
                 <li key={href}>

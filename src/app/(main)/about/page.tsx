@@ -184,12 +184,6 @@ export default async function AboutPage() {
                             >
                                 Explore the Laboratory
                             </Link>
-                            <Link
-                                href="/courses"
-                                className="px-6 py-3 border-2 border-ink text-ink hover:bg-ink hover:text-paper transition-all rounded-sm font-mono text-xs uppercase tracking-widest"
-                            >
-                                Start Learning
-                            </Link>
                         </div>
                     </div>
                 </div>

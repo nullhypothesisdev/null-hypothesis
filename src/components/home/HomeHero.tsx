@@ -65,12 +65,11 @@ export default function HomeHero({
             <section className="w-full border-y border-ink/10 bg-ink/[0.02] backdrop-blur-sm mb-32">
                 <div className="max-w-7xl mx-auto px-6 py-6">
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
-                        <Link
-                            href="/courses"
-                            className="group flex items-center gap-3 px-8 py-4 bg-ink text-paper hover:bg-accent transition-all duration-300 rounded-sm shadow-md"
-                        >
-                            <span className="font-mono text-xs uppercase tracking-widest">{t('home.explore_courses')}</span>
-                            <ArrowRight className={`w-4 h-4 transition-transform ${dir === 'rtl' ? 'group-hover:-translate-x-1 rotate-180' : 'group-hover:translate-x-1'}`} />
+                        <Link href="/lab">
+                            <button className="px-8 py-4 bg-ink text-paper hover:bg-accent transition-all duration-300 rounded-sm shadow-md font-mono text-xs uppercase tracking-widest flex items-center gap-2 group">
+                                {t('home.browse_labs')}
+                                <ArrowRight className={`w-4 h-4 transition-transform ${dir === 'rtl' ? 'group-hover:-translate-x-1 rotate-180' : 'group-hover:translate-x-1'}`} />
+                            </button>
                         </Link>
 
                         <Link href="/studies">

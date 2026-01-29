@@ -13,13 +13,7 @@ export default async function Home() {
     .or('slug.like.lab/%,slug.like.studies/%')
     .order('published_at', { ascending: false });
 
-  // Fetch featured courses
-  const { data: coursesData } = await supabase
-    .from('courses')
-    .select('slug, title, title_ar, description, description_ar, difficulty, estimated_hours, cover_image_url')
-    .eq('published', true)
-    .order('created_at', { ascending: false })
-    .limit(3);
+
 
   const labs: PageRow[] = [];
   const projects: PageRow[] = [];
@@ -82,7 +76,6 @@ export default async function Home() {
   return (
     <HomeClient
       hero={hero}
-      coursesData={coursesData || []}
       labs={labs}
       projects={projects}
     />

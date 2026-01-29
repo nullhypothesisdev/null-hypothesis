@@ -36,7 +36,6 @@ export default function Header() {
         {/* 2. DESKTOP NAVIGATION */}
         <nav className="hidden md:flex items-center space-x-8">
           <NavLink href="/">{t('nav.home')}</NavLink>
-          <NavLink href="/courses">{t('nav.courses')}</NavLink>
           <NavLink href="/lab">{t('nav.labs')}</NavLink>
           <NavLink href="/studies">{t('nav.case_files')}</NavLink>
         </nav>
@@ -67,7 +66,6 @@ export default function Header() {
           >
             <nav className="flex flex-col space-y-4">
               <MobileLink href="/" onClick={closeMobile}>{t('nav.home')}</MobileLink>
-              <MobileLink href="/courses" onClick={closeMobile}>{t('nav.courses')}</MobileLink>
               <MobileLink href="/lab" onClick={closeMobile}>{t('nav.labs')}</MobileLink>
               <MobileLink href="/studies" onClick={closeMobile}>{t('nav.case_files')}</MobileLink>
             </nav>
